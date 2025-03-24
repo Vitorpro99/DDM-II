@@ -49,7 +49,7 @@ export default function App() {
           <Image
 
             source={require('./assets/erro.gif')} 
-            style={styles.img}/>
+            style={styles.img}q2/>
 
           <Text>Alguma errado você fez</Text>
           <Button title="Fechar" color="black" onPress={showErro}/>
