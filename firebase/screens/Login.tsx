@@ -1,11 +1,12 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { StyleSheet, Text, View, TextInput, Pressable } from 'react-native';
 import { auth } from '../firebase';
+import { useNavigation } from '@react-navigation/native';
 
 export default function Login(){
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
-
+    const navigation = useNavigation();
     const logar = () =>{
         auth
         .signInWithEmailAndPassword(email,senha)
@@ -13,7 +14,16 @@ export default function Login(){
             console.log('Usuário logado com sucesso', userCredentials.user.email);
         }).catch(error=>alert(error.message))
     }
-
+    useEffect(() => {
+        const login = auth.onAuthStateChanged(
+            user => {
+                if(user) navigation.replace("Home")
+            }
+        )
+    })
+    const irCadastro = () =>{
+        navigation.replace("Cadastro")
+    }
     return(
         <View style={styles.login}>
             <Text style={styles.loginText}>Login</Text>
@@ -27,6 +37,9 @@ export default function Login(){
 
             <Pressable style={styles.buttao} onPress={logar}>
                 <Text style={styles.textBotao}>Logar</Text>
+            </Pressable>
+            <Pressable style={styles.buttao} onPress={irCadastro}>
+                <Text style={styles.textBotao}>Cadastro</Text>
             </Pressable>
         </View>
     )
