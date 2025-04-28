@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { StyleSheet, Text, View, TextInput, Pressable, TouchableOpacity } from 'react-native';
-import { auth } from '../firebase';
+import { auth, firestore } from '../firebase';
 import estilo from '../estilo';
 import { useNavigation } from '@react-navigation/native';
 import {Usuario} from '../Model/Usuario'
@@ -10,9 +10,32 @@ export default function Cadastro(){
     const navigation = useNavigation();
     const [formUsuario,setFormUsuario] =
         useState<Partial<Usuario>>({});
-
+    const refUsuario = firestore.collection("Usuario");
     const Voltar = () =>{
         navigation.replace("Login");
+    }
+    const fazerLogin = () => {
+        auth
+            .createUserWithEmailAndPassword(formUsuario.email, formUsuario.senha)
+            .then(
+                userCredentials => {
+                    const usuario = userCredentials.user;
+                    console.log("Registrado com o email: ", usuario.email);
+
+                    const idUsuario = refUsuario.doc(auth.currentUser.uid);
+                    idUsuario.set({
+                        id: auth.currentUser.uid,
+                        nome:   formUsuario.nome,
+                        email:  formUsuario.email,
+                        senha:  formUsuario.senha,  
+                        fone:   formUsuario.fone
+                    })
+
+                }
+            )
+            .catch(
+                error=>alert(error.message)
+            )
     }
 
     return(
@@ -42,7 +65,10 @@ export default function Cadastro(){
         
         </View>
         <View style={estilo.buttonContainer}>
-            <TouchableOpacity style={estilo.button}><Text style={estilo.buttonText}> Cadastrar </Text></TouchableOpacity>
+            <TouchableOpacity style={estilo.button}><Text style={estilo.buttonText}
+            onPress={fazerLogin}
+            
+            > Cadastrar </Text></TouchableOpacity>
             <TouchableOpacity style={[estilo.button,estilo.buttonOutline]} onPress={Voltar}><Text style={[estilo.buttonText,estilo.buttonOutlineText]}>Voltar</Text></TouchableOpacity>
             </View>
         </View>
