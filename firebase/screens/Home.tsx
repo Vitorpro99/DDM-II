@@ -24,9 +24,9 @@ export default function Home(){
                 
                 <Text style={estilo.button}>Logout</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={estilo.button} onPress={goProduto}>
+            {/* <TouchableOpacity style={estilo.button} onPress={goProduto}>
                 <Text style={estilo.buttontext}>Cadastro Produto</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
         </View>
     )
 

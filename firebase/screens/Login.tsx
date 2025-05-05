@@ -17,7 +17,7 @@ export default function Login(){
     useEffect(() => {
         const login = auth.onAuthStateChanged(
             user => {
-                if(user) navigation.replace("Home")
+                if(user) navigation.replace("Menu")
             }
         )
     })
