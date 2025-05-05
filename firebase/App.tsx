@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import Login from './screens/Login';
 import Home from './screens/Home';
 import Cadastro from './screens/Cadastro'
+import ProdutoForm from './screens/Produto'
 // import Home from './screens/Home';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -14,8 +15,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
       <Stack.Screen name="Login" component={Login}/>
-        <Stack.Screen name="Cadastro" component={Cadastro}/>
-        
+        <Stack.Screen name="ProdutoForm" com component={ProdutoForm}/>
         <Stack.Screen name="Home" component={Home}/>
 
       </Stack.Navigator>

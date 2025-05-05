@@ -24,7 +24,7 @@ export default function Cadastro(){
 
                     const idUsuario = refUsuario.doc(auth.currentUser.uid);
                     idUsuario.set({
-                        id: auth.currentUser.uid,
+                        id:     auth.currentUser.uid,
                         nome:   formUsuario.nome,
                         email:  formUsuario.email,
                         senha:  formUsuario.senha,  

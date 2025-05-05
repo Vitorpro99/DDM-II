@@ -4,7 +4,11 @@ export default StyleSheet.create({
     container:{
         flex: 1,
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        // borderWidth:5,
+        // borderColor: "gray",
+        // borderRadius: 12
+
     },
     inputContainer: {
         width: '80%'
@@ -33,7 +37,7 @@ export default StyleSheet.create({
     buttonText:{
         color: 'white',
         fontWeight: '700',
-        fontSize: 15
+        fontSize: 15,
     },
     buttonOutline: {
         backgroundColor: 'white',
@@ -42,5 +46,10 @@ export default StyleSheet.create({
     },
     buttonOutlineText: {
         color: '#06b8b8'
+    },
+    text:{
+        fontSize: 24,
+        marginBottom:20,
+        fontWeight:"bold"
     }
 });

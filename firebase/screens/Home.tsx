@@ -13,7 +13,9 @@ export default function Home(){
             navigation.replace("Login");
         })
     }
-
+    const goProduto = () =>{
+        navigation.replace("ProdutoForm")
+    }
     return(
         <View>
             <Text style={{marginBottom: 20}}>Usuário Logado!</Text>
@@ -21,6 +23,9 @@ export default function Home(){
             <TouchableOpacity style={estilo.button} onPress={logout}>
                 
                 <Text style={estilo.button}>Logout</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={estilo.button} onPress={goProduto}>
+                <Text style={estilo.buttontext}>Cadastro Produto</Text>
             </TouchableOpacity>
         </View>
     )
