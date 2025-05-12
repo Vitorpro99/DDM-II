@@ -1,6 +1,6 @@
 import React, {createElement, useEffect, useState} from 'react';
-import { StyleSheet, Text, View, TextInput, Pressable, TouchableOpacity } from 'react-native';
-import { auth, firestore, addDoc, collection} from '../firebase';
+import { StyleSheet, Text, View, TextInput, FlatList,Pressable, TouchableOpacity } from 'react-native';
+import { auth, firestore} from '../firebase';
 import estilo from '../estilo';
 import { useNavigation } from '@react-navigation/native';
 import {Produto} from '../Model/Produto';
@@ -13,8 +13,18 @@ export default function produtoListar() {
         const refProduto = firestore.collection("Usuario")
         .doc(auth.currentUser?.uid).collection("Produto")
     
+    const criaItem = ({item}) =>(
+        <View>
+            <Text>{item.produto}</Text>
+            <Text>{item.quantidade}</Text>
+            <Text>{item.preco}</Text>
+        </View>
+
+    )
+
     useEffect(()=>{
-        if(!load){ const lerCollection = refProduto
+        if(load){ 
+            const lerCollection = refProduto
             .onSnapshot((querySnapshot)=>{
                 const Produto = [];
                 querySnapshot.forEach((documentSnapshot)=>{
@@ -34,7 +44,11 @@ export default function produtoListar() {
 
     return(
         <View>
-            <Text>Lista de Produtos</Text>
+            <FlatList
+            data={produto}
+            renderItem={criaItem}
+            keyExtractor={(item) => item.id}
+            />
         </View>
     )
 
