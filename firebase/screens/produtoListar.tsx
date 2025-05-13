@@ -1,7 +1,7 @@
 import React, {createElement, useEffect, useState} from 'react';
 import { StyleSheet, Text, View, TextInput, FlatList,Pressable, TouchableOpacity } from 'react-native';
 import { auth, firestore} from '../firebase';
-import estilo from '../estilo';
+import estilo from '../estilo2';
 import { useNavigation } from '@react-navigation/native';
 import {Produto} from '../Model/Produto';
 
@@ -14,10 +14,10 @@ export default function produtoListar() {
         .doc(auth.currentUser?.uid).collection("Produto")
     
     const criaItem = ({item}) =>(
-        <View>
-            <Text>{item.produto}</Text>
-            <Text>{item.quantidade}</Text>
-            <Text>{item.preco}</Text>
+        <View style={estilo.viewProduto}>
+            <Text style={estilo.textoProd}>{item.produto}</Text>
+            <Text style={estilo.textoProd}>{item.quantidade}</Text>
+            <Text style={estilo.textoProd}>{item.preco}</Text>
         </View>
 
     )
