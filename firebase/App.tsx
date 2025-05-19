@@ -16,6 +16,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        <Stack.Screen name="Cadastro" component={Cadastro}/>
         <Stack.Screen name="Login" component={Login}/>
         <Stack.Screen name="ProdutoForm" component={ProdutoForm}/>
         <Stack.Screen name="Home" component={Home} />

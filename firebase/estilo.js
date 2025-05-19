@@ -1,3 +1,4 @@
+import { cloneElement } from "react";
 import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
@@ -51,5 +52,11 @@ export default StyleSheet.create({
         fontSize: 24,
         marginBottom:20,
         fontWeight:"bold"
+    },
+    foto:{
+        width:200,
+        height:200,
+        borderRadius:100,
+        alignItems: "center"
     }
 });

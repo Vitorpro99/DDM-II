@@ -22,9 +22,9 @@ export default function Cadastro(){
                     const usuario = userCredentials.user;
                     console.log("Registrado com o email: ", usuario.email);
 
-                    const idUsuario = refUsuario.doc(auth.currentUser.uid);
+                    const idUsuario = refUsuario.doc();
                     idUsuario.set({
-                        id:     auth.currentUser.uid,
+                        id:     idUsuario.id,
                         nome:   formUsuario.nome,
                         email:  formUsuario.email,
                         senha:  formUsuario.senha,  

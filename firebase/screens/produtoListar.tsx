@@ -5,6 +5,8 @@ import estilo from '../estilo2';
 import { useNavigation } from '@react-navigation/native';
 import {Produto} from '../Model/Produto';
 
+
+
 export default function produtoListar() {
 
     const [produto,setProduto] = useState<Produto[]>([]); //array em branco
@@ -26,7 +28,7 @@ export default function produtoListar() {
         if(load){ 
             const lerCollection = refProduto
             .onSnapshot((querySnapshot)=>{
-                const Produto = [];
+                const produto = [];
                 querySnapshot.forEach((documentSnapshot)=>{
                     produto.push({
                             ...documentSnapshot.data(),
