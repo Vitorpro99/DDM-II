@@ -1,11 +1,11 @@
 import React, {createElement, useState} from 'react';
 import { StyleSheet, Text, View, TextInput, Pressable, TouchableOpacity, Alert,Image } from 'react-native';
-import { auth, firestore, addDoc, collection} from '../firebase';
+import { auth, firestore, storage, addDoc, collection} from '../firebase';
 import estilo from '../estilo';
 import { useNavigation } from '@react-navigation/native';
 import {Produto} from '../Model/Produto';
 import * as ImagePicker from 'expo-image-picker';
-
+import { uploadBytes } from 'firebase/storage';
 
 
 export default function ProdutoForm(){
@@ -17,6 +17,7 @@ export default function ProdutoForm(){
     .doc(auth.currentUser?.uid).collection("Produto")
     const limpar = () =>{
         setFormProduto({});
+        setimagePath('');
     }
     const cadastrarProduto = () =>{
         const IdProduto = refProduto.doc();
@@ -60,6 +61,7 @@ export default function ProdutoForm(){
         })
         console.log(foto.assets[0]);
         setimagePath(foto.assets[0].uri)
+        enviarFoto(foto);
     
     }
     const abrirGaleria = async() =>{
@@ -74,7 +76,20 @@ export default function ProdutoForm(){
         
     });
     setimagePath(foto.assets[0].uri)
+    enviarFoto(foto);
+
 }
+
+const enviarFoto = async (foto) =>{
+    const filename = foto.assets(0).filename
+    const ref = storage.ref(`imagens/${filename}`)
+
+    const img = await fetch(imagePath);
+    const bytes = await img.blob();
+    const resultado = await uploadBytes(ref, bytes);
+
+}
+
 return(
     <View style={estilo.container}>
         <Text style={estilo.text}>Cadastro de Produtos</Text>
