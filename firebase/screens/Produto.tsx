@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import {Produto} from '../Model/Produto';
 import * as ImagePicker from 'expo-image-picker';
 import { uploadBytes } from 'firebase/storage';
-
+import { createClient } from '@supabase/supabase-js';
 
 export default function ProdutoForm(){
     const [imagePath,setimagePath] = useState('');
@@ -14,11 +14,18 @@ export default function ProdutoForm(){
     const [formProduto, setFormProduto] = useState<Partial<Produto>>({});
     const refProduto = firestore.collection("Usuario")
     
+
+    
+
+
     .doc(auth.currentUser?.uid).collection("Produto")
     const limpar = () =>{
         setFormProduto({});
         setimagePath('');
     }
+    const supabaseUrl = 'https://sewofsptvdkdglnwuqiv.supabase.co'
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNld29mc3B0dmRrZGdsbnd1cWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4Njc2NzQsImV4cCI6MjA2NDQ0MzY3NH0.UjGpjm2KciF3IE4G8xJPWZ9aeQl0eN_KOjrD33qtodM'
+    const supabase = createClient(supabaseUrl, supabaseKey);
     const cadastrarProduto = () =>{
         const IdProduto = refProduto.doc();
         const codProduto = IdProduto.id;
@@ -87,6 +94,10 @@ const enviarFoto = async (foto) =>{
     const img = await fetch(imagePath);
     const bytes = await img.blob();
     const resultado = await uploadBytes(ref, bytes);
+
+    const {data, error} = await supabase.storage
+        .from('dados')
+        .upload(`imagens/${filename}`, bytes);
 
 }
 
