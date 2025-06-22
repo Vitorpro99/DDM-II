@@ -17,16 +17,19 @@ export default function Home(){
         navigation.replace("ProdutoForm")
     }
     return(
-        <View>
-            <Text style={{marginBottom: 20}}>Usuário Logado!</Text>
+       <View style={estilo.container}>
+            <Text style={{marginBottom:20}}>
+                Usuário logado: {auth.currentUser?.email}
+            </Text>
 
-            <TouchableOpacity style={estilo.button} onPress={logout}>
-                
-                <Text style={estilo.button}>Logout</Text>
-            </TouchableOpacity>
-            {/* <TouchableOpacity style={estilo.button} onPress={goProduto}>
-                <Text style={estilo.buttontext}>Cadastro Produto</Text>
-            </TouchableOpacity> */}
+            <View style={estilo.buttonContainer}>
+                <TouchableOpacity
+                    style={estilo.button}
+                    onPress={logout}
+                >
+                    <Text style={estilo.buttonText}>Logout</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     )
 

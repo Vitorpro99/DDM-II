@@ -1,57 +1,87 @@
-import React, {createElement, useEffect, useState} from 'react';
-import { StyleSheet, Text, View, TextInput, FlatList,Pressable, TouchableOpacity } from 'react-native';
-import { auth, firestore} from '../firebase';
-import estilo from '../estilo2';
+import React, { useState, useEffect } from 'react';
+import { FlatList, Image, KeyboardAvoidingView, SafeAreaView, SafeAreaViewComponent, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import estilo from "../estilo";
+import { auth, firestore } from '../firebase';
 import { useNavigation } from '@react-navigation/native';
-import {Produto} from '../Model/Produto';
+import { Produto } from '../model/Produto';
 
+export default function ProdutoListar () {
+    const navigation = useNavigation();
+    const [produto, setProduto] = useState<Produto[]>([]);   //Array em branco
+    const [loading, setLoading] = useState(true);
 
+    const refProduto = firestore.collection("Usuario")
+        .doc(auth.currentUser?.uid)
+        .collection("Produto").orderBy("descricao", "asc");
 
-export default function produtoListar() {
+    const delProduto = firestore.collection("Usuario")
+        .doc(auth.currentUser?.uid)
+        .collection("Produto");      
 
-    const [produto,setProduto] = useState<Produto[]>([]); //array em branco
-    const [load,setLoad] = useState(true);
+    useEffect ( () => {
+        if (loading){
+            listarProdutos();
+        }
+        
+    }, [produto] )
 
-        const refProduto = firestore.collection("Usuario")
-        .doc(auth.currentUser?.uid).collection("Produto")
-    
-    const criaItem = ({item}) =>(
-        <View style={estilo.viewProduto}>
-            <Text style={estilo.textoProd}>{item.produto}</Text>
-            <Text style={estilo.textoProd}>{item.quantidade}</Text>
-            <Text style={estilo.textoProd}>{item.preco}</Text>
-        </View>
-
-    )
-
-    useEffect(()=>{
-        if(load){ 
-            const lerCollection = refProduto
-            .onSnapshot((querySnapshot)=>{
+    const listarProdutos = () => {
+        const lerColletion = refProduto
+            .onSnapshot((querySnapshot) => {
                 const produto = [];
-                querySnapshot.forEach((documentSnapshot)=>{
+                querySnapshot.forEach((documentSnapshot) => {
                     produto.push({
-                            ...documentSnapshot.data(),
-                        key:   documentSnapshot.id
+                        ...documentSnapshot.data(),
+                        key: documentSnapshot.id
                     });
                 });
                 setProduto(produto);
                 console.log(produto);
-                setLoad(false);
-                    })
-            return () => lerCollection()
-                }
-            },[produto]
-       )
+                setLoading(false);
+            });
+            return () => lerColletion();
+    }
 
-    return(
-        <View>
-            <FlatList
-            data={produto}
-            renderItem={criaItem}
-            keyExtractor={(item) => item.id}
+
+    const excluir = async(item) => {
+        const resultado = await delProduto
+            .doc(item.id)
+            .delete()
+            .then( () => {
+                setLoading(true);
+                alert("Produto excluído!");                
+            })
+    }
+
+    const criaItem = ({item}) => (
+        <TouchableOpacity 
+            style={estilo.item} 
+            onPress={() => navigation.navigate("Cadastrar Produto", {itemDel: item})}
+            onLongPress={() => excluir(item)}
+        >            
+            <Image 
+                source={{ uri: item.foto}} 
+                style={estilo.fotoListar} 
             />
-        </View>
+            <View style={estilo.detalhes}>
+                <Text style={estilo.titulo}>Descrição: {item.descricao} </Text>
+                <Text style={estilo.titulo}>Preço: {item.preco} </Text>
+                <Text style={estilo.titulo}>Estoque: {item.estoque} </Text>
+                <Text style={estilo.titulo}>Invest: {item.estoque * item.preco}</Text>
+            </View>
+        </TouchableOpacity>
     )
 
+
+    return(
+        <SafeAreaView style={estilo.container}>
+            <FlatList
+                data={produto}
+                renderItem={criaItem}
+                keyExtractor={(item) => item.id}
+                refreshing={loading}
+                onRefresh={() => listarProdutos() }
+            />
+        </SafeAreaView>
+    )
 }
