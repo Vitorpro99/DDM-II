@@ -3,14 +3,15 @@ import { Image, Alert, KeyboardAvoidingView, StyleSheet, Text, TextInput, Toucha
 import estilo from "../estilo";
 import { auth, firestore, storage } from '../firebase';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { Produto } from '../model/Produto';
+import { Produto } from '../Model/Produto';
 import * as ImagePicker from 'expo-image-picker';
 import { uploadBytes } from 'firebase/storage';
 
-// const route = useRoute();
-// const params = route.params;
+
+
 
 export default function ProdutoManter () {
+    const route = useRoute();
     const navigation = useNavigation();
     const [imagePath, setImagePath] = useState('https://i.pinimg.com/736x/b4/ef/d2/b4efd2db313e76462f0a6e7ae4509af3.jpg');
     
@@ -32,17 +33,38 @@ export default function ProdutoManter () {
     }, [])
 
 
-    const salvar = () => {
-       const refIdProduto = refProduto.doc();
-       const produto = new Produto(formProduto);
-       produto.id = refIdProduto.id;
+    useEffect(()=>{
        
-       refIdProduto.set(produto.toFirestore())
+        if(route.params && route.params.produto){
+            setFormProduto(route.params.produto);
+            setImagePath(route.params.produto.foto);
+        }
+    },[route.params])
+    const salvar = () => {
+        const produto = new Produto(formProduto);
+        if(formProduto.id){
+            const refIdProduto = refProduto.doc(produto.id)
+
+            refIdProduto.update(produto.toFirestore())
+            .then(()=>{
+                alert("Produto atualizado");
+                Limpar()
+            })
+        }else{
+            const refIdProduto = refProduto.doc();
+       
+            produto.id = refIdProduto.id;
+       
+            refIdProduto.set(produto.toFirestore())
        .then(() => {
             alert("Produto Adicionado!")   
             Limpar();         
        })
        .catch( error => alert(error.message))
+        }
+
+
+       
     }
 
     const Limpar = () => {
@@ -94,10 +116,10 @@ export default function ProdutoManter () {
     enviarFoto(foto);
 
 }
-const pesquisar = () =>{
-    const resultado = refProduto
-    .doc()
-}
+// const pesquisar = () =>{
+//     const resultado = refProduto
+//     .doc()
+// }
 
     const enviaFoto = async (foto) => {
         setImagePath(foto.assets[0].uri);
@@ -115,16 +137,16 @@ const pesquisar = () =>{
         setFormProduto({ ... formProduto, foto: urlDownload})
     }
 
-    const pesquisar = (itemDel) => {
-        console.log(itemDel);
-        const resultado = refProduto
-        .doc(itemDel.id)
-        .onSnapshot(documentSnapshot => {
-            const produto = new Produto(documentSnapshot.data())
-            setFormProduto(produto);
-            setImagePath(produto.foto);
-        })
-    }
+    // const pesquisar = (itemDel) => {
+    //     console.log(itemDel);
+    //     const resultado = refProduto
+    //     .doc(itemDel.id)
+    //     .onSnapshot(documentSnapshot => {
+    //         const produto = new Produto(documentSnapshot.data())
+    //         setFormProduto(produto);
+    //         setImagePath(produto.foto);
+    //     })
+    // }
 
     return(
         <View style={estilo.container}>
