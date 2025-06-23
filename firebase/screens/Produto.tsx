@@ -79,22 +79,25 @@ export default function ProdutoManter () {
         });                
         enviaFoto(foto);
     }
-
-
-    const abrirGaleria = async() => {
-        const permissao = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (permissao.granted === false) {
-            alert("Você recusou o acesso à câmera!");
-            return;
-        }
-
-        const foto = await ImagePicker.launchImageLibraryAsync({
-            allowsEditing: true,
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            quality: 1,            
-        });        
-        enviaFoto(foto);
+    const abrirGaleria = async() =>{
+    const permissao = await ImagePicker.requestMediaLibraryPermissionsAsync()
+    if (permissao.granted === false){
+        alert("Você recusou o acesso a galeria")
+        return;
     }
+    const foto = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing:true,
+        mediaTypes: ImagePicker.MediaTypeOptions.Images
+        
+    });
+    setimagePath(foto.assets[0].uri)
+    enviarFoto(foto);
+
+}
+const pesquisar = () =>{
+    const resultado = refProduto
+    .doc()
+}
 
     const enviaFoto = async (foto) => {
         setImagePath(foto.assets[0].uri);
