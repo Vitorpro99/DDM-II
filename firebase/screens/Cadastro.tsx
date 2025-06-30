@@ -30,7 +30,6 @@ export default function Cadastro(){
                         senha:  formUsuario.senha,  
                         fone:   formUsuario.fone
                     })
-
                 }
             )
             .catch(

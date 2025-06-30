@@ -1,12 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, View, TextInput, Pressable, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import estilo from '../styles/estiloForms';
 import { SafeAreaView } from "react-native-safe-area-context";
 import Cadastro from '../screens/Cadastro'
+import { auth } from "../firebase";
 export default function Login() {
     
     const navigation = useNavigation();
+    const [email,setEmail] = useState('');
+    const [senha,setSenha] = useState('');
+
+    const logar = () => {
+        auth
+        .signInWithEmailAndPassword(email,senha)
+        .then(userCredentials =>{
+            console.log("Usuário logado com sucesso", userCredentials.user.email);
+        }).catch(error=>alert(error.message));
+    }
+
 
     const goToCadastro = () =>{
         navigation.replace("Cadastro")
@@ -23,19 +35,19 @@ export default function Login() {
             <View style={estilo.div2}>
                 <View style={estilo.subDiv}>
                 <Text style={estilo.textForm}>Email</Text>
-                <TextInput style={estilo.inputForm} placeholder="Digite seu email"/>
+                <TextInput style={estilo.inputForm} placeholder="Digite seu email" onChangeText={email => setEmail(email)}/>
                 <Text style={estilo.textForm}>Senha</Text>
-                <TextInput style={estilo.inputForm} placeholder="Digite sua senha"/>
+                <TextInput style={estilo.inputForm} placeholder="Digite sua senha" onChangeText={senha=> setSenha(senha)}/>
                 </View>
             </View>
 
             <View style={estilo.div3}>
 
                 <View style={estilo.divButton}>
-                    <TouchableOpacity style={estilo.mainButton} >
+                    <TouchableOpacity style={estilo.mainButton} onPress={logar}>
                         <Text style={estilo.mainButtonText}>LOGIN</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={estilo.secondButton} onPress={goToCadastro()}>
+                    <TouchableOpacity style={estilo.secondButton} onPress={goToCadastro}>
                         <Text style={estilo.secondButtonText}>Cadastrar-se</Text>
                     </TouchableOpacity>
                 </View>
