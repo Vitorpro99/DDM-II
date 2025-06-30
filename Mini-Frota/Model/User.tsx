@@ -1,4 +1,4 @@
-export class Usuario{
+export class User{
     public id: string;
     public nome: string;
     public email: string;
@@ -6,7 +6,7 @@ export class Usuario{
     public fone: string;
     public foto: string;
 
-    constructor(obj: Partial<Usuario>){
+    constructor(obj: Partial<User>){
         if(obj){
             this.id = obj.id
             this.nome = obj.nome
@@ -28,7 +28,7 @@ export class Usuario{
         return objeto
     }
     setFirestore(){
-        const usuario={
+        const user={
             id: this.id,
             nome: this.nome,
             email: this.email,
@@ -36,6 +36,6 @@ export class Usuario{
             fone: this.fone,
             foto: this.foto
         }
-        return usuario
+        return user
     } 
 }

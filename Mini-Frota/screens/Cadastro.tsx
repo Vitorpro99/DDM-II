@@ -3,31 +3,37 @@ import { StyleSheet, Text, View, TextInput, Pressable, TouchableOpacity } from '
 import { useNavigation } from '@react-navigation/native';
 import estilo from '../styles/estiloForms';
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Usuario } from "../Model/Usuario";
+import { User } from "../Model/User";
+import Login from "../screens/Login"
 import { auth, firestore } from '../firebase'
 export default function Cadastro() {
 
+    const navigation = useNavigation();
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
-    const [formUsuario, setFormUsuario] = useState<Partial<Usuario>>({});
-    const refUsuario = useState(firestore.collection("Usuario"));
+    const [formUser, setFormUser] = useState<Partial<User>>({});
+    const refUser = firestore.collection("User");
+    const gotoLogin = () =>{
+        navigation.replace("Login")
+    }
 
     const logar = () => {
         auth
-            .createUserWithEmailAndPassword(formUsuario.email, formUsuario.senha)
+            .createUserWithEmailAndPassword(formUser.email, formUser.senha)
             .then(
                 userCredentials => {
-                    const usuario = userCredentials.user;
-                    console.log("Registrado com o email: ", usuario.email);
+                    const user = userCredentials.user;
+                    console.log("Registrado com o email: ", user.email);
 
-                    const idUsuario = refUsuario.doc();
-                    idUsuario.set({
-                        id:     idUsuario.id,
-                        nome:   formUsuario.nome,
-                        email:  formUsuario.email,
-                        senha:  formUsuario.senha,
-                        fone:   formUsuario.fone
+                    const idUser = refUser.doc(user.uid);
+                    idUser.set({
+                        id:     user.uid,
+                        nome:   formUser.nome,
+                        email:  formUser.email,
+                        senha:  formUser.senha,
+                        fone:   formUser.fone
                     })
+                    navigation.replace("Logged");
                 }
             )
             .catch(
@@ -47,26 +53,26 @@ export default function Cadastro() {
                     <View style={estilo.subDiv}>
                         <Text style={estilo.textForm}>Nome</Text>
                         <TextInput style={estilo.inputForm} placeholder="Digite o seu nome"
-                            onChangeText={texto => setFormUsuario({
-                                ...formUsuario, nome: texto
+                            onChangeText={texto => setFormUser({
+                                ...formUser, nome: texto
                             })}
                         />
                         <Text style={estilo.textForm}>Email</Text>
                         <TextInput style={estilo.inputForm} placeholder="Digite seu email"
-                            onChangeText={texto => setFormUsuario({
-                                ...formUsuario, email: texto
+                            onChangeText={texto => setFormUser({
+                                ...formUser, email: texto
                             })}
                         />
                         <Text style={estilo.textForm}>Senha</Text>
                         <TextInput style={estilo.inputForm} placeholder="Digite sua senha"
-                            onChangeText={texto => setFormUsuario({
-                                ...formUsuario, senha: texto
+                            onChangeText={texto => setFormUser({
+                                ...formUser, senha: texto
                             })}
                         />
                         <Text style={estilo.textForm}>Fone</Text>
                         <TextInput style={estilo.inputForm} placeholder="Digite o seu telefone"
-                            onChangeText={texto => setFormUsuario({
-                                ...formUsuario, fone: texto
+                            onChangeText={texto => setFormUser({
+                                ...formUser, fone: texto
                             })}
                         />
 
@@ -78,10 +84,10 @@ export default function Cadastro() {
                     <View style={estilo.divButton}>
                         <TouchableOpacity style={estilo.mainButton} onPress={logar} >
                             <Text style={estilo.mainButtonText}>CADASTRAR</Text>
-                        </TouchableOpacity>
-                        {/* <TouchableOpacity style={estilo.secondButton}>
-                        <Text style={estilo.secondButtonText}>Cadastrar-se</Text>
-                    </TouchableOpacity> */}
+                        </TouchableOpacity >
+                         <TouchableOpacity onPress={gotoLogin} style={estilo.secondButton}>
+                        <Text style={estilo.secondButtonText}>Login</Text>
+                    </TouchableOpacity> 
                     </View>
                 </View>
             </View>

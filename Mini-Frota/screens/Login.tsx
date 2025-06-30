@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { StyleSheet, Text, View, TextInput, Pressable, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import estilo from '../styles/estiloForms';
 import { SafeAreaView } from "react-native-safe-area-context";
 import Cadastro from '../screens/Cadastro'
 import { auth } from "../firebase";
+import loggedIn from "..screens/loggedIn";
 export default function Login() {
     
+
     const navigation = useNavigation();
     const [email,setEmail] = useState('');
     const [senha,setSenha] = useState('');
@@ -16,9 +18,19 @@ export default function Login() {
         .signInWithEmailAndPassword(email,senha)
         .then(userCredentials =>{
             console.log("Usuário logado com sucesso", userCredentials.user.email);
+            console.log("Usuário logado com sucesso", userCredentials.user.uid);
+
+            console.log("UID do usuário logado:" + auth.currentUser?.uid);
         }).catch(error=>alert(error.message));
     }
 
+    useEffect(() => {
+        const login = auth.onAuthStateChanged(
+            user => {
+                if(user) navigation.replace("Logged")
+            }
+        )
+    })
 
     const goToCadastro = () =>{
         navigation.replace("Cadastro")
